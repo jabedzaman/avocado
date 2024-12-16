@@ -1,0 +1,102 @@
+name: "apps"
+
+services:
+  nginx:
+    container_name: "nginx"
+    image: "jc21/nginx-proxy-manager:latest"
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+      - "81:81" #disable this port once you have configured the manager
+      # extra port based on your needs
+      - "5432:5432"
+    env_file:
+      - ./secrets/nginx.env
+    volumes:
+      - ./volumes/nginx/data:/data
+      - ./volumes/nginx/letsencrypt:/etc/letsencrypt
+
+  pihole:
+    container_name: "pihole"
+    image: pihole/pihole:latest
+    restart: unless-stopped
+    ports:
+      - "53:53/tcp"
+      - "53:53/udp"
+    volumes:
+      - "./volumes/pihole/etc-pihole:/etc/pihole"
+      - "./volumes/pihole/etc-dnsmasq.d:/etc/dnsmasq.d"
+    env_file:
+      - ./secrets/pihole.env
+
+  portainer:
+    container_name: "portainer"
+    image: portainer/portainer-ce:latest
+    restart: unless-stopped
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "./volumes/portainer:/data"
+
+  prometheus:
+    container_name: "prometheus"
+    image: prom/prometheus:latest
+    restart: unless-stopped
+    depends_on:
+      - node-exporter
+    volumes:
+      - ./volumes/prometheus/config.yml:/etc/prometheus/prometheus.yml:ro
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+
+  grafana:
+    container_name: "grafana"
+    image: grafana/grafana-oss:latest
+    restart: unless-stopped
+    depends_on:
+      - prometheus
+    user: "1002" # user, can be found with `id -u`
+    env_file:
+      - ./secrets/grafana.env
+    volumes:
+      - ./volumes/grafana/data:/var/lib/grafana
+    healthcheck:
+      test:
+        ["CMD-SHELL", "wget -q --tries=1 -O- http://localhost:3000/api/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  node-exporter:
+    container_name: "node-exporter"
+    image: quay.io/prometheus/node-exporter:latest
+    restart: unless-stopped
+    privileged: true # This is required to gather metrics related to the host system
+    pid: host
+    command: "--path.rootfs=/host"
+    volumes:
+      - /:/host:ro,rslave
+
+  mariadb:
+    container_name: "mariadb"
+    image: yobasystems/alpine-mariadb:latest
+    restart: unless-stopped
+    env_file:
+      - ./secrets/mariadb.env
+    volumes:
+      - ./volumes/mariadb:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  minio:
+    container_name: "minio"
+    image: quay.io/minio/minio:latest
+    restart: unless-stopped
+    command: server /data --console-address ":9001"
+    volumes:
+      - ./volumes/minio:/data
+    env_file:
+      - ./secrets/minio.env

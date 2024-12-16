@@ -1,0 +1,85 @@
+➜  apps cat deploy
+#!/bin/bash
+
+# Define color codes
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[0;33m'
+BLUE='\033[0;34m'
+CYAN='\033[0;36m'
+RESET='\033[0m'
+
+# Path to the docker-compose file
+COMPOSE_FILE="/home/jabed/apps/docker-compose.yaml"
+
+# Check if docker-compose file exists
+if [[ ! -f "$COMPOSE_FILE" ]]; then
+  echo -e "${RED}docker-compose.yaml not found in the current directory.${RESET}"
+  exit 1
+fi
+
+# Extract service names using yq and trim quotes
+SERVICES=$(yq '.services | keys | .[]' "$COMPOSE_FILE" 2>/dev/null | tr -d '"')
+
+# Check if yq executed successfully
+if [[ $? -ne 0 || -z "$SERVICES" ]]; then
+  echo -e "${RED}Failed to parse docker-compose.yaml. Ensure the file is valid and yq is properly installed.${RESET}"
+  exit 1
+fi
+
+# Display the services with numbers
+echo -e "${CYAN}Available services:${RESET}"
+i=1
+declare -A SERVICE_MAP
+for SERVICE in $SERVICES; do
+  echo -e "${GREEN}$i) $SERVICE${RESET}"
+  SERVICE_MAP[$i]=$SERVICE
+  ((i++))
+done
+
+# Prompt user for action
+echo -e "${BLUE}"
+read -p "Enter the number corresponding to the service you want to manage: " CHOICE
+echo -e "${RESET}"
+
+# Validate the user input
+if [[ -z "${SERVICE_MAP[$CHOICE]}" ]]; then
+  echo -e "${RED}Invalid choice. Exiting.${RESET}"
+  exit 1
+fi
+
+SELECTED_SERVICE=${SERVICE_MAP[$CHOICE]}
+echo -e "${CYAN}You selected: ${GREEN}$SELECTED_SERVICE${RESET}"
+
+# Prompt user for action type
+echo -e "${CYAN}"
+echo "What would you like to do?"
+echo -e "${GREEN}1) Start the service"
+echo -e "2) Stop the service${RESET}"
+echo -e "${BLUE}"
+read -p "Enter your choice: " ACTION
+echo -e "${RESET}"
+
+# Perform the selected action
+case $ACTION in
+1)
+  # Pull the image for the selected service
+  echo -e "${BLUE}Pulling image for $SELECTED_SERVICE...${RESET}"
+  docker compose -f "$COMPOSE_FILE" pull "$SELECTED_SERVICE"
+
+  # Bring up the selected service
+  echo -e "${BLUE}Starting $SELECTED_SERVICE...${RESET}"
+  docker compose -f "$COMPOSE_FILE" up -d "$SELECTED_SERVICE"
+  echo -e "${GREEN}Service $SELECTED_SERVICE is up and running.${RESET}"
+  ;;
+2)
+  # Stop the selected service
+  echo -e "${BLUE}Stopping $SELECTED_SERVICE...${RESET}"
+  docker compose -f "$COMPOSE_FILE" down "$SELECTED_SERVICE"
+  echo -e "${GREEN}Service $SELECTED_SERVICE has been stopped.${RESET}"
+  ;;
+*)
+  echo -e "${RED}Invalid action. Exiting.${RESET}"
+  exit 1
+  ;;
+esac
