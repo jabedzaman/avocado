@@ -100,3 +100,12 @@ services:
       - ./volumes/minio:/data
     env_file:
       - ./secrets/minio.env
+
+  vaultwarden:
+    container_name: vaultwarden
+    image: vaultwarden/server:latest
+    restart: unless-stopped
+    env_file:
+      - ./secrets/vaultwarden.env
+    volumes:
+      - ./volumes/vaultwarden/:/data/
