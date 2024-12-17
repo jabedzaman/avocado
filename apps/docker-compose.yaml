@@ -91,6 +91,29 @@ services:
       timeout: 5s
       retries: 5
 
+  postgres:
+    container_name: "postgres"
+    image: postgres:17-alpine
+    restart: unless-stopped
+    env_file:
+      - ./secrets/postgres.env
+    volumes:
+      - ./volumes/postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  postgres-exporter:
+    container_name: "postgres-exporter"
+    image: quay.io/prometheuscommunity/postgres-exporter
+    restart: unless-stopped
+    depends_on:
+      - postgres
+    env_file:
+      - ./secrets/postgres-exporter.env
+
   minio:
     container_name: "minio"
     image: quay.io/minio/minio:latest

@@ -34,3 +34,19 @@ sudo vi /etc/resolv.conf
 # replace nameserver
 # nameserver 1.1.1.1
 ```
+
+# Psql setup
+
+```bash
+docker exec -it psql /bin/sh
+psql -U postgres
+CREATE USER <user> WITH PASSWORD '<password>';
+ALTER USER <user> WITH SUPERUSER;
+/q
+```
+
+Proxy the stream
+
+- open nginx proxy manager
+- create a new stream proxy
+- add host `postgres` and port `5432`

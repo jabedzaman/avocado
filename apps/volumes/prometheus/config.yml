@@ -11,3 +11,6 @@ scrape_configs:
     scheme: http
     static_configs:
       - targets: ["minio:9000"]
+  - job_name: "postgres"
+    static_configs:
+      - targets: ["postgres-exporter:9187"]
