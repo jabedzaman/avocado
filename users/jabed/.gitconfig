@@ -1,0 +1,6 @@
+[user]
+	name = jabedzaman
+	email = hi@jabed.dev
+	signingkey = 5A1E5B4C1587E151FEF4BBAFE85E4BE5AF9BC51D
+[commit]
+	gpgsign = true
