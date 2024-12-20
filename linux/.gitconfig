@@ -1,0 +1,17 @@
+[init]
+	defaultBranch = main
+[credential "https://github.com"]
+	helper =
+	helper = !/usr/bin/gh auth git-credential
+[credential "https://gist.github.com"]
+	helper =
+	helper = !/usr/bin/gh auth git-credential
+[user]
+	name = jabedzaman
+	email = hi@jabed.dev
+	signingkey = 5A1E5B4C1587E151FEF4BBAFE85E4BE5AF9BC51D
+[commit]
+	gpgsign = true
+[core]
+	editor=vim
+	autocrlf = input

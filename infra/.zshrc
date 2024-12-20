@@ -13,4 +13,4 @@ plugins=(git zsh-autosuggestions zsh-syntax-highlighting fast-syntax-highlightin
 source $ZSH/oh-my-zsh.sh
 
 # User Aliases
-alias deploy="$HOME/apps/deploy"
+alias deploy="$HOME/infra/deploy"

@@ -1,0 +1,209 @@
+# Configuration for Alacritty, the GPU enhanced terminal emulator.
+
+env:
+  TERM: alacritty
+  LANG: "en_US.UTF-8"
+
+window:
+  padding:
+    x: 6
+    y: 6
+
+  # Change opacity
+  #opacity : 10
+
+  dynamic_padding: true
+
+  # Window title
+  title: Alacritty
+
+  # Window class (Linux/BSD only):
+  class:
+    # Application instance name
+    instance: Alacritty
+    # General application class
+    general: Alacritty
+
+scrolling:
+  # Maximum number of lines in the scrollback buffer.
+  # Specifying '0' will disable scrolling.
+  history: 5000
+  # Font configuration
+  # font:
+  # Normal (roman) font face
+  # normal:
+  # Font family
+  #
+  # Default:
+  #   - (macOS) Menlo
+  #   - (Linux/BSD) monospace
+  #   - (Windows) Consolas
+  # family: Source Code Pro
+  # family: CodeNewRoman Nerd Font
+  # family: RobotoMono Nerd Font
+  # family: Hack
+  # family: JetBrains Mono
+  # family: Fira Code
+  # family: Cartograph CF Italic
+  # family: UbuntuMono Nerd Font
+  # family: Monofur Nerd Font
+  # family: TerminessTTF Nerd Font
+  # family: Mononoki Nerd Font
+
+  # The `style` can be specified to pick a specific face.
+  # style: Regular
+
+  # Bold font face
+  # bold:
+  # Font family
+  #
+  # If the bold family is not specified, it will fall back to the
+  # value specified for the normal font.
+  # family: Source Code Pro
+  # family: CodeNewRoman Nerd Font
+  # family: RobotoMono Nerd Font
+  # family: Hack
+  # family: JetBrains Mono
+  # family: Fira Code
+  # family: Cartograph CF Italic
+  # family: UbuntuMono Nerd Font
+  # family: Monofur Nerd Font
+  # family: TerminessTTF Nerd Font
+  # family: Mononoki Nerd Font
+
+  # The `style` can be specified to pick a specific face.
+  # style: Bold
+
+  # Italic font face
+  # italic:
+  #   # Font family
+  #   #
+  #   # If the italic family is not specified, it will fall back to the
+  #   # value specified for the normal font.
+  #   # family: Source Code Pro
+  #   # family: CodeNewRoman Nerd Font
+  #   # family: RobotoMono Nerd Font
+  #   # family: Hack
+  #   # family: JetBrains Mono
+  #   # family: Fira Code
+  #   family: Cartograph CF Italic
+  #   # family: UbuntuMono Nerd Font
+  #   # family: Monofuritalic Nerd Font Mono
+  #   # family: TerminessTTF Nerd Font
+  #   # family: Mononoki Nerd Font
+  #
+  #   # The `style` can be specified to pick a specific face.
+  #   style: Italic
+  #
+  # # Bold italic font face
+  # bold_italic:
+  #   # Font family
+  #   #
+  #   # If the bold italic family is not specified, it will fall back to the
+  #   # value specified for the normal font.
+  #   # family: Source Code Pro
+  #   # family: CodeNewRoman Nerd Font
+  #   # family: RobotoMono Nerd Font
+  #   # family: Hack
+  #   # family: JetBrains Mono
+  #   # family: Fira Code
+  #   family: Cartograph CF Italic
+  #   # family: UbuntuMono Nerd Font
+  #   # family: Monofuritalic Nerd Font Mono
+  #   # family: TerminessTTF Nerd Font
+  #   # family: Mononoki Nerd Font
+  #
+  #   # The `style` can be specified to pick a specific face.
+  #   style: Bold Italic
+  #
+  # Point size
+  size: 10.0
+
+  # Offset is the extra space around each character. `offset.y` can be thought of
+  # as modifying the line spacing, and `offset.x` as modifying the letter spacing.
+  offset:
+    x: 0
+    y: 1
+
+draw_bold_text_with_bright_colors: true
+
+#######################################
+##      START OF COLOR SCHEMES       ##
+#######################################
+colors:
+  name: TokyoNight Night
+  author: Folke
+  # Default colors
+  primary:
+    background: "0x1a1b26"
+    foreground: "0xc0caf5"
+
+  # Normal colors
+  normal:
+    black: "0x15161E"
+    red: "0xf7768e"
+    green: "0x9ece6a"
+    yellow: "0xe0af68"
+    blue: "0x7aa2f7"
+    magenta: "0xbb9af7"
+    cyan: "0x7dcfff"
+    white: "0xa9b1d6"
+
+  # Bright colors
+  bright:
+    black: "0x414868"
+    red: "0xf7768e"
+    green: "0x9ece6a"
+    yellow: "0xe0af68"
+    blue: "0x7aa2f7"
+    magenta: "0xbb9af7"
+    cyan: "0x7dcfff"
+    white: "0xc0caf5"
+
+  indexed_colors:
+    - { index: 16, color: "0xff9e64" }
+    - { index: 17, color: "0xdb4b4b" }
+theme: Tokyonight_Night
+#######################################
+##       END OF COLOR SCHEMES        ##
+#######################################
+
+key_bindings:
+  # (Windows, Linux, and BSD only)
+  # - { key: V,         mods: Control|Shift, action: Paste                       }
+  - { key: V, mods: Alt, action: Paste }
+  - { key: C, mods: Alt, action: Copy }
+  - { key: Insert, mods: Shift, action: PasteSelection }
+  - { key: Key0, mods: Control, action: ResetFontSize }
+  - { key: Equals, mods: Control, action: IncreaseFontSize }
+  - { key: Up, mods: Alt|Shift, action: IncreaseFontSize }
+  - { key: Down, mods: Alt|Shift, action: DecreaseFontSize }
+  - { key: F11, mods: None, action: ToggleFullscreen }
+  - { key: Paste, mods: None, action: Paste }
+  - { key: Copy, mods: None, action: Copy }
+  - { key: L, mods: Control, action: ClearLogNotice }
+  - { key: L, mods: Control, chars: "\f" }
+  - {
+      key: PageUp,
+      mods: None,
+      action: ScrollPageUp,
+      mode: ~Alt
+    }
+  - {
+      key: PageDown,
+      mods: None,
+      action: ScrollPageDown,
+      mode: ~Alt
+    }
+  - {
+      key: Home,
+      mods: Shift,
+      action: ScrollToTop,
+      mode: ~Alt
+    }
+  - {
+      key: End,
+      mods: Shift,
+      action: ScrollToBottom,
+      mode: ~Alt
+    }

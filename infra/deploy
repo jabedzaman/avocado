@@ -1,4 +1,3 @@
-➜  apps cat deploy
 #!/bin/bash
 
 # Define color codes
@@ -10,7 +9,7 @@ CYAN='\033[0;36m'
 RESET='\033[0m'
 
 # Path to the docker-compose file
-COMPOSE_FILE="/home/jabed/apps/docker-compose.yaml"
+COMPOSE_FILE="$($HOME/infra/docker-compose.yaml)"
 
 # Check if docker-compose file exists
 if [[ ! -f "$COMPOSE_FILE" ]]; then

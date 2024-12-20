@@ -124,11 +124,28 @@ services:
     env_file:
       - ./secrets/minio.env
 
+  nexus:
+    container_name: "nexus"
+    image: quay.io/jabedzaman/nexus-arm
+    volumes:
+      - ./volumes/nexus/nexus-data:/nexus-data
+
   vaultwarden:
-    container_name: vaultwarden
+    container_name: "vaultwarden"
     image: vaultwarden/server:latest
     restart: unless-stopped
     env_file:
       - ./secrets/vaultwarden.env
     volumes:
       - ./volumes/vaultwarden/:/data/
+
+  logto:
+    container_name: "logto"
+    image: svhd/logto:latest
+    restart: unless-stopped
+    entrypoint: ["sh", "-c", "npm run cli db seed -- --swe && npm start"]
+    env_file:
+      - ./secrets/logto.env
+    depends_on:
+      postgres:
+        condition: service_healthy
