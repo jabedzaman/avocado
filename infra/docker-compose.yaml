@@ -11,6 +11,7 @@ services:
       - "81:81" #disable this port once you have configured the manager
       # extra port based on your needs
       - "5432:5432"
+      - "1194:1194/udp"
     env_file:
       - ./secrets/nginx.env
     volumes:
@@ -149,3 +150,15 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+
+  openvpn:
+    container_name: "openvpn"
+    image: openvpn/openvpn-as
+    restart: unless-stopped
+    cap_add:
+      - MKNOD
+      - NET_ADMIN
+    devices:
+      - "/dev/net/tun"
+    volumes:
+      - ./volumes/openvpn:/openvpn
